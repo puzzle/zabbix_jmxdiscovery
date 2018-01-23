@@ -38,7 +38,11 @@ public class JMXDiscovery {
 	public JMXDiscovery(String hostname, int port, String usr, String pwd) {
 		try
 		{
-			this.jmxServerUrl = new JMXServiceURL("service:jmx:rmi:///jndi/rmi://" + hostname + ":" + port + "/jmxrmi");
+			if (hostname.startsWith("_")) {
+				this.jmxServerUrl = new JMXServiceURL(hostname.replaceAll("_([^.]+).", "$1:").replaceFirst("(.*):", "$1://").replaceAll("__", "+") + ":" + port);
+			} else {
+				this.jmxServerUrl = new JMXServiceURL("service:jmx:rmi:///jndi/rmi://" + hostname + ":" + port + "/jmxrmi");
+			}
 			jmxc = null;
 			mbsc = null;
 			username = usr;
